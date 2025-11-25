@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:insert="~{include/head}" >
+  <title>Home</title>
+</head>
+
+<body>
+
+  <!-- ======= Header ======= -->
+  <header th:insert="~{include/header}"  id="header" class="header fixed-top d-flex align-items-center"></header>
+  <!-- End Header -->
+
+  <!-- ======= Sidebar ======= -->
+  <aside id="sidebar" class="sidebar" th:insert="~{include/sidebar}"></aside><!-- End Sidebar-->
+
+  <main id="main" class="main">
+
+    <div class="pagetitle">
+      <h1>Admin Dashboard</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="/home">Home</a></li>
+          <li class="breadcrumb-item active">Dashboard</li>
+        </ol>
+      </nav>
+    </div><!-- End Page Title -->
+
+
+    <div class="col-lg-8">
+          <div class="row">
+
+            <!-- City -->
+            <div class="col-xxl-3 col-md-3 col-6">
+
+              <div class="card info-card customers-card">
+
+                <div class="card-body" onclick="pageRedirect('city')">
+                  <h5 class="card-title">City</h5>
+
+                  <div class="d-flex align-items-center">
+                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                      <i class="bi bi-geo-alt-fill" style="font-size: 30px;"></i>
+                    </div>
+                    <div class="ps-3">
+                      <h6 id="totalCity">0</h6>
+
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
+            </div><!-- End Customers Card -->
+
+            <!-- College -->
+            <div class="col-xxl-3 col-md-3 col-6">
+              <div class="card info-card revenue-card">
+
+                <div class="card-body" onclick="pageRedirect('college')">
+                  <h5 class="card-title">College</h5>
+
+                  <div class="d-flex align-items-center">
+                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                      <i class="bi bi-file-earmark-code-fill" style="font-size: 30px;"></i>
+                    </div>
+                    <div class="ps-3">
+                      <h6 id="totalCollege">0</h6>
+
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div><!-- End Revenue Card -->
+
+            <!-- Student -->
+            <div class="col-xxl-3 col-md-3 col-6">
+              <div class="card info-card sales-card">
+
+                <div class="card-body" onclick="pageRedirect('student')">
+                  <h5 class="card-title">Student</h5>
+
+                  <div class="d-flex align-items-center">
+                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                      <i class="bi bi-mortarboard-fill" style="font-size: 30px;"></i>
+                    </div>
+                    <div class="ps-3">
+                      <h6 id="totalStudent">0</h6>
+
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div><!-- End Sales Card -->
+
+            <!-- Exam -->
+            <div class="col-xxl-3 col-md-3 col-6">
+
+              <div class="card info-card customers-card">
+
+                <div class="card-body" onclick="pageRedirect('exam')">
+                  <h5 class="card-title">Exam</h5>
+
+                  <div class="d-flex align-items-center">
+                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                      <i class="bi bi-file-earmark-person-fill" style="font-size: 30px;"></i>
+                    </div>
+                    <div class="ps-3">
+                      <h6 id="totalExam">0</h6>
+
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
+            </div><!-- End Customers Card -->
+
+          </div>
+        </div><!-- End Left side columns -->
+  </main>
+  <!-- ======= Footer ======= -->
+  <footer id="footer" class="footer" th:insert="~{include/footer}">  </footer>
+
+    <!-- dashboard details script -->
+    <script>
+      function getDashboardDetails() {
+
+          $.ajax({
+              type: 'GET',
+              url: baseUrl + 'adminAPI/dashboard',
+              success: function (response) {
+                  if (response.result) {
+                      $('#totalStudent').html(response.data.totalStudent);
+                      $('#totalCollege').html(response.data.totalCollege);
+                      $('#totalCity').html(response.data.totalCity);
+                      $('#totalExam').html(response.data.totalExam);
+                  }
+              },
+              error: function (xhr, status, error) {
+                  console.error('Error occurred:', status, error);
+                  alert('An error occurred while processing your Dashboard request. Please try again, or contact support if the issue persists.');
+              }
+          });
+      }
+
+      getDashboardDetails();
+    </script>
+
+
+  <script>
+    function pageRedirect(pageUrl){
+    window.location.href = baseUrl + pageUrl;
+    }
+  </script>
+
+
+  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Vendor JS Files -->
+  <div  th:insert="~{include/vendor-js}"></div>
+</body>
+
+</html>

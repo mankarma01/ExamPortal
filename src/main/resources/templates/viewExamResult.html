@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:insert="~{include/head}" >
+  <title>Home</title>
+</head>
+
+<body>
+
+  <!-- ======= Header ======= -->
+  <header th:insert="~{include/header}"  id=s"header" class="header fixed-top d-flex align-items-center"></header>
+  <!-- End Header -->
+
+  <!-- ======= Sidebar ======= -->
+  <aside id="sidebar" class="sidebar" th:insert="~{include/sidebar}"></aside><!-- End Sidebar-->
+
+  <main id="main" class="main">
+    <div class="pagetitle">
+      <h1>Result Report</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="/home">Home</a></li>
+          <li class="breadcrumb-item"><a href="/exam">Exam Report</a></li>
+          <li class="breadcrumb-item active">Result Report</li>
+        </ol>
+      </nav>
+    </div><!-- End Page Title -->
+
+    <div class="tab-content pt-2">
+
+      <div class="tab-pane fade show active profile-overview d-flex justify-content-center" id="profile-overview">
+        <div class="col-lg-6 col-md-10 col-12 row">
+          <div class="col-lg-3 col-md-4 col-5 label "><b>Exam Title :</b></div>
+          <div class="col-lg-9 col-md-8 col-7" ><span th:text="${exam.title}"></span></div>
+          <div class="col-lg-3 col-md-4 col-5 label"><b>Exam Date :</b></div>
+          <div class="col-lg-9 col-md-8 col-7" ><span th:text="${exam.examDate}"></span></div>
+          <div class="col-lg-3 col-md-4 col-5 label"><b>Total Time :</b></div>
+          <div class="col-lg-9 col-md-8 col-7" ><span th:text="${exam.totalTime}"></span><span> Minutes</span></div>
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <section class="section">
+      <div class="row mb-3">
+        <div class="col-lg-12 text-center">
+
+          <form id="formData">
+          <div class="row">
+
+            <input type="hidden" id="examId" name="examId" th:value="${examId}">
+
+
+            <div class="col-md-2 mt-3">
+              <div class="form-floating mb-3">
+                <select class="form-select" id="cityId" name="cityId" onchange="getActiveCollegeByCity(this.value)" aria-label="State">
+                  <option value="0">Select City</option>
+                  <option value="-1">All</option>
+                  <option th:each="city : ${cityList}" th:value="${city.cityId}" th:text="${city.cityName}"></option>
+                </select>
+                <label for="cityId">City</label>
+              </div>
+            </div>
+
+            <div class="col-md-2 mt-3">
+              <div class="form-floating mb-3">
+                <select class="form-select" id="collegeId" name="collegeId" aria-label="State">
+                  <option value="0">Select College</option>
+                </select>
+                <label for="collegeId">College</label>
+              </div>
+            </div>
+
+
+            <div class="col-md-2 mt-3">
+              <div class="form-floating mb-3">
+                <select class="form-select" id="resultStatus" name="resultStatus" aria-label="State">
+                  <option selected value="complete">Complete</option>
+                  <option value="running">Running</option>
+                  <option value="all">All</option>
+                </select>
+                <label for="resultStatus">Result Status</label>
+              </div>
+            </div>
+
+<!--            <div class="col-md-2 mt-3">
+              <div class="form-floating mb-3">
+                <select class="form-select" id="minimumMarks" name="minimumMarks" aria-label="State">
+                  <option value="0">0</option>
+                  <option value="5">5</option>
+                  <option value="10">10</option>
+                  <option value="15">15</option>
+                  <option value="20">20</option>
+                  <option value="25" selected>25</option>
+                </select>
+                <label for="minimumMarks">Minimum Marks</label>
+              </div>
+            </div>-->
+
+            <div class="col-md-2 mt-3">
+              <div class="form-floating mb-3">
+                <input type="number" class="form-control" id="minimumMarks" name="minimumMarks" placeholder="Exam Date">
+                <label for="minimumMarks">Minimum Marks</label>
+              </div>
+            </div>
+
+            <div class="col-md-2 mt-3">
+              <div class="form-floating">
+                <input type="date" class="form-control" id="examDate" name="examDate" placeholder="Exam Date">
+                <label for="examDate">Exam Date</label>
+              </div>
+            </div>
+
+            <div class="col-lg-2 col-md-4 col-6 mt-4">
+              <button class="btn btn-primary w-100" type="submit" id="search">Search</button>
+            </div>
+
+            <div class="col-lg-2 col-md-4 col-6  mt-4 mb-2">
+              <button class="btn btn-primary w-100" type="button" id="excelExportButton"><i class="bi bi-download"></i> Export XLSX</button>
+            </div>
+
+          </div>
+          </form>
+
+          <div class="card">
+            <div class="card-body scrollable-table">
+
+              <table class="table datatable" id="resultTable">
+                <thead>
+                <tr>
+                  <th>No.</th>
+                  <th>StudentName</th>
+                  <th>Score</th>
+                  <th>Total</th>
+                  <th>Set</th>
+                  <th>Percent</th>
+                  <th>FatherName</th>
+                  <th>Enrollment</th>
+                  <th>Mobile</th>
+                  <th>Email</th>
+                  <th>Collage</th>
+                  <th style="min-width: 180px;">Exam</th>
+                  <th style="min-width: 85px;">Date</th>
+
+                  <!--<th>wrong</th>
+                  <th>skip</th>
+                  <th>next</th>-->
+                  <th style="min-width: 190px;">StartTime</th>
+                  <th style="min-width: 190px;">EndTime</th>
+                  <th style="min-width: 105px;">Attempt Time</th>
+                  <th style="min-width: 120px;">Status</th>
+                  <th>Delete</th>
+                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+              </table>
+              <!-- End Table with stripped rows -->
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+
+  <!-- ======= Footer ======= -->
+  <footer id="footer" class="footer" th:insert="~{include/footer}">
+
+  </footer>
+
+
+  <script>
+
+    function getActiveCollegeByCity(cityId){
+
+    $.ajax({
+        type: 'GET',
+        url: baseUrl + 'collegeAPI/getActiveByCity/' + cityId ,
+        success: function (response) {
+            if (response.result) {
+
+                let selectOption = '<option value="0">Select College</option>';
+
+                response.data.forEach(function (college, index) {
+
+                selectOption += `
+                        <option value="${college.collegeId}">${college.collegeName}</option>
+                `;
+                });
+
+                $('#collegeId').html(selectOption);
+
+
+            let urlParams = new URLSearchParams(window.location.search);
+            let collegeIdVal = urlParams.get('collegeId');
+
+            if(collegeIdVal==null){
+            $('#collegeId').val(0)
+            }
+            $('#collegeId').val(collegeIdVal)
+
+            } else {
+                $('#collegeId').html('<option value="0">No Colleges Available</option>');
+            }
+
+        },
+        error: function (xhr, status, error) {
+            console.error('Error occurred:', status, error);
+            //alert('An error occurred while processing your request. Please try again, or contact support if the issue persists.');
+        }
+    });
+
+}
+
+  </script>
+
+  <script>
+
+    function fetchExamResults() {
+
+    const examId = $('#examId').val();
+
+    let urlParams = new URLSearchParams(window.location.search);
+    let resultStatus = urlParams.get('resultStatus');
+    let minimumMarks = urlParams.get('minimumMarks');
+    let examDate = urlParams.get('examDate');
+    let collegeId = urlParams.get('collegeId');
+    let cityId = urlParams.get('cityId');
+
+    if(resultStatus==null){ resultStatus='complete';}
+    if(minimumMarks==null){ minimumMarks='25';}
+    if(examDate==null){ examDate='';}
+    if(collegeId==null){ collegeId='0';}
+    if(cityId==null){ cityId='0';}
+
+    if(cityId>0 || cityId==-1){
+    getActiveCollegeByCity(cityId);
+    }
+
+            $('#resultStatus').val(resultStatus)
+            $('#minimumMarks').val(minimumMarks)
+            $('#examDate').val(examDate)
+            $('#collegeId').val(collegeId)
+            $('#cityId').val(cityId)
+
+            const apiUrl = `${baseUrl}resultAPI/getAllByExam/${examId}?rs=${resultStatus}&mm=${minimumMarks}&ed=${examDate}&cId=${collegeId}`;
+
+            $.ajax({
+                url: apiUrl,
+                method: 'GET',
+                success: function (response) {
+                    if (response.result) {
+                        let tableBody = '';
+
+                        // Iterate through the data and generate table rows
+                        response.data.forEach(function (item, index) {
+                            const student = item.student;
+                            const exam = item.exam;
+
+                            const startTime = new Date(item.startTime);
+                            const submitTime = new Date(item.submitDate);
+                            const timeDiff = Math.floor((submitTime - startTime) / (1000 * 60));
+                            const examDate = new Date(item.examDate);
+
+                            const percentage = ((item.correct / item.totalMarks) * 100).toFixed(2);;
+
+                            tableBody += `
+                                <tr>
+                                    <td>${index + 1}</td>
+                                    <td>${student.name || '-'}</td>
+                                    <td>${item.correct || 0}</td>
+                                    <td>${item.totalMarks || 0}</td>
+                                    <td>${item.examSet || '-'}</td>
+                                    <td>${percentage + ' %' || 0  + ' %'}</td>
+                                    <td>${student.fatherName || '-'}</td>
+                                    <td>${student.enrollmentId || '-'}</td>
+                                    <td>${student.mobile || '-'}</td>
+                                    <td>${student.email || '-'}</td>
+                                    <td>${student.college.collegeName || '-'}</td>
+                                    <td>${item.examTitle || '-'}</td>
+                                    <td>${examDate.toLocaleDateString() || '-'}</td>
+                                 <!--   <td>${item.wrong || 0}</td>
+                                    <td>${item.skip || 0}</td>
+                                    <td>${item.next || '-'}</td>-->
+                                    <td>${startTime.toLocaleString() || '-'}</td>
+                                    <td>${submitTime.toLocaleString() || '-'}</td>
+                                    <td>${timeDiff + ' Minutes' || '-'}</td>
+                                    <td>${item.isActive ? 'Running': `Completed <a href=""
+                                     onclick="changeStatus('${item.resultId}')">
+                                    <i class="bi bi-pencil-square" style="margin-left: 5px;"></i>
+                                  </a>`}
+                                  </td>
+
+                                    <td>
+                                  <a href=""
+                                     onclick="deleteResult('${item.resultId}')">
+                                    <i class="bi bi-trash-fill" style="margin-left: 5px;"></i>
+                                  </a>
+                                </td>
+                                </tr>
+                            `;
+                        });
+
+                        // Append generated rows to the table body
+                        $('#resultTable tbody').html(tableBody);
+
+                    } else {
+                        alert('Error: ' + response.message);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error fetching data:', status, error);
+                    alert('Failed to load data from server.');
+                }
+            });
+        }
+
+        // Event listener for fetching data when a button is clicked (optional)
+       // $('#search').click(function () {
+      //      fetchExamResults();
+       // });
+
+        fetchExamResults();
+
+  </script>
+
+  <!-- delete result data-->
+  <script>
+    function deleteResult(resultId) {
+        // Confirm before deleting
+        if (confirm("Are you sure you want to delete this student?")) {
+            $.ajax({
+                url: baseUrl + 'resultAPI/delete/' + resultId, // Replace with your actual API endpoint
+                type: 'DELETE', // HTTP method
+                success: function(response) {
+                    // Handle success (e.g., show a message, reload the table, etc.)
+                    if(response.result){
+                    alert("Result deleted successfully!");
+                    window.location.reload(); // Reload the page or update the UI dynamically
+                    }
+                },
+                error: function(xhr, status, error) {
+                    // Handle error
+                    console.error("Error deleting result:", error);
+                    alert("Failed to delete the Student record. Please try again.");
+                }
+            });
+        }
+    }
+
+  </script>
+
+  <!-- change exam status -->
+
+  <script>
+    function changeStatus(resultId) {
+        // Confirm before deleting
+        if (confirm("Are you sure you want to change this student result status ?")) {
+            $.ajax({
+                url: baseUrl + 'resultAPI/status/' + resultId, // Replace with your actual API endpoint
+                type: 'DELETE', // HTTP method
+                success: function(response) {
+                    // Handle success (e.g., show a message, reload the table, etc.)
+                    if(response.result){
+                    alert("Result status changed successfully!");
+                    window.location.reload(); // Reload the page or update the UI dynamically
+                    }
+                },
+                error: function(xhr, status, error) {
+                    // Handle error
+                    console.error("Error changing status:", error);
+                    alert("Failed to delete the Student record. Please try again.");
+                }
+            });
+        }
+    }
+
+  </script>
+
+  <script>
+    document.getElementById('excelExportButton').addEventListener('click', function () {
+      // Get the table element
+      var table = document.getElementById('resultTable');
+
+      // Create a worksheet from the HTML table
+      var wb = XLSX.utils.table_to_book(table, { sheet: "Sheet1" });
+
+      // Export the worksheet to an Excel file
+      XLSX.writeFile(wb, "table_data.xlsx");
+    });
+  </script>
+
+
+  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Vendor JS Files -->
+  <div  th:insert="~{include/vendor-js}"></div>
+
+
+</body>
+
+</html>

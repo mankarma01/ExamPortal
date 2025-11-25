@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:insert="~{include/head}" >
+  <title>Home</title>
+</head>
+
+<body>
+
+  <!-- ======= Header ======= -->
+  <header th:insert="~{include/header}"  id="header" class="header fixed-top d-flex align-items-center"></header>
+  <!-- End Header -->
+
+  <!-- ======= Sidebar ======= -->
+  <aside id="sidebar" class="sidebar" th:insert="~{include/sidebar}"></aside><!-- End Sidebar-->
+
+  <main id="main" class="main">
+    <div class="pagetitle">
+      <h1>Exam Report</h1>
+    </div><!-- End Page Title -->
+
+    <div class="tab-content pt-2">
+
+      <div class="tab-pane fade show active profile-overview" id="profile-overview">
+        <h5 class="card-title">Exam Details:</h5>
+
+        <div class="row">
+          <div class="col-lg-3 col-md-4 label ">Exam Title</div>
+          <div class="col-lg-9 col-md-8" ><span th:text="${exam.title}"></span></div>
+        </div>
+
+        <div class="row">
+          <div class="col-lg-3 col-md-4 label">Exam Date</div>
+          <div class="col-lg-9 col-md-8" ><span th:text="${exam.examDate}"></span></div>
+        </div>
+
+        <div class="row">
+          <div class="col-lg-3 col-md-4 label">Total Time</div>
+          <div class="col-lg-9 col-md-8" ><span th:text="${exam.totalTime}"></span><span> Minutes</span></div>
+        </div>
+
+        <div class="row">
+          <div class="col-lg-3 col-md-4 label">Description</div>
+          <div class="col-lg-9 col-md-8" ><span th:text="${exam.description}"></span></div>
+        </div>
+
+      </div>
+
+    </div>
+
+
+
+    <section class="section mt-3">
+      <div class="row">
+        <div class="col-lg-12">
+
+          <div></div>
+
+          <div class="card">
+            <div class="card-body">
+
+              <div class="col-lg-12 text-center"><h5 class="card-title">Add Question</h5></div>
+
+              <table class="table" id="examTable">
+                <thead>
+                <tr>
+                  <th>No.</th>
+                  <th>question</th>
+                  <th>option1</th>
+                  <th>option2</th>
+                  <th>option3</th>
+                  <th>option4</th>
+                  <th>correctAnswer</th>
+                  <th>Add</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr>
+                <td>No.</td>
+                <td><input type="text" class="form-control" id="question"></td>
+                <td><input type="text" class="form-control" id="option1"></td>
+                <td><input type="text" class="form-control" id="option2"></td>
+                <td><input type="text" class="form-control" id="option3"></td>
+                <td><input type="text" class="form-control" id="option4"></td>
+                <td><input type="text" class="form-control" id="correctAnswer"></td>
+                <td><a href="/examCreate"><button class="btn btn-primary w-100">ADD</button></a></td>
+                </tr>
+                </tbody>
+              </table>
+              <!-- End Table with stripped rows -->
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </section>
+
+<!--    <div class="col-2">
+      <a href="/examCreate"><button class="btn btn-primary w-100">Submit Questions</button></a>
+    </div>-->
+
+    <form id="formData" class="">
+      <div class="form-floating mb-3">
+        <input type="file" class="form-control" id="file" name="file" placeholder="Enter exam title">
+        <label for="file">Select CSV Question file</label>
+      </div>
+
+      <input type="hidden" id="examId" th:value="${examId}" name="examId">
+
+      <div class="col-2">
+        <button class="btn btn-primary w-100" type="submit">SUBMIT CSV</button>
+      </div>
+
+    </form>
+
+  </main>
+  <!-- ======= Footer ======= -->
+  <footer id="footer" class="footer" th:insert="~{include/footer}">
+
+  </footer>
+
+  <script>
+    $(document).ready(function () {
+      $('#formData').on('submit', function (event) {
+        event.preventDefault(); // Prevent default form submission
+
+        var formData = new FormData(this);
+
+        $.ajax({
+          url: baseUrl + 'questionAPI/uploadCSV', // Replace with your API endpoint
+          type: 'POST',
+          data: formData,
+          processData: false,
+          contentType: false,
+          success: function (response) {
+              if (response.result) {
+                 // alert(response.message);
+                  alert('File uploaded successfully: ' + response.message);
+                  window.location.href = baseUrl + 'exam';
+              } else {
+                  alert('Operation failed: ' + response.message);
+                  window.location.reload();
+              }
+          },
+          error: function (xhr, status, error) {
+            alert('Error uploading file: ' + xhr.responseText || error);
+          }
+        });
+      });
+    });
+  </script>
+
+
+  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Vendor JS Files -->
+  <div  th:insert="~{include/vendor-js}"></div>
+</body>
+
+</html>

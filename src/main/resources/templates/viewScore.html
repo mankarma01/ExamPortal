@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:insert="~{include/head}" >
+  <title>Home</title>
+</head>
+
+<body>
+<!--
+  <header th:insert="~{include/header}"  id="header" class="header fixed-top d-flex align-items-center"></header>
+  End Header -->
+
+  <!--
+  <aside id="sidebar" class="sidebar" th:insert="~{include/sidebar}"></aside>-->
+
+<header class="bg-dark py-3">
+  <div class="container">
+    <div class="d-flex justify-content-center">
+      <!-- Company Logo -->
+      <img th:src="@{/assets/img/logo.png}" alt="Company Logo" class="me-3" style="width: 200px; height: auto;">
+      <!-- Company Name -->
+      <h4 style="color:#fff;text:center;" class="pt-3">Exam Portal</h4>
+      <!-- Small Address -->
+      <small class="ms-3 pt-4 text-muted">Indore</small>
+    </div>
+  </div>
+</header>
+
+  <main class="d-flex justify-content-center col-lg-12 mt-3">
+    <div class="col-lg-12">
+
+    <div class="pagetitle col-lg-12 d-flex justify-content-center">
+      <h4 style="margin-left: 25px;color:#0d6efd;">Student Score</h4>
+    </div><!-- End Page Title -->
+
+    <div class="col-lg-12">
+
+      <div class="col-lg-12 pt-2 mb-3 d-flex justify-content-center">
+        <div class="col-lg-3"></div>
+
+        <div class="col-lg-6">
+          <h5 class="card-title">Exam Details:</h5>
+
+          <div class="row">
+            <div class="col-lg-3 col-md-3 label ">Student Name:</div>
+            <div class="col-lg-9 col-md-9" ><span th:text="${student.name}"></span></div>
+          </div>
+
+          <div class="row">
+            <div class="col-lg-3 col-md-3 label">Father Name:</div>
+            <div class="col-lg-9 col-md-9" ><span th:text="${student.fatherName}"></span></div>
+          </div>
+          <div class="row">
+            <div class="col-lg-3 col-md-3 label">Mobile:</div>
+            <div class="col-lg-9 col-md-9" ><span th:text="${student.mobile}"></span></div>
+          </div>
+          <div class="row">
+            <div class="col-lg-3 col-md-3 label">Email:</div>
+            <div class="col-lg-9 col-md-9" ><span th:text="${student.email}"></span></div>
+          </div>
+          <div class="row">
+            <div class="col-lg-3 col-md-3 label">Collage:</div>
+            <div class="col-lg-9 col-md-9" ><span th:text="${student.collageName}"></span></div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="card col-lg-12">
+        <div class="card-body">
+          <!-- Advanced Form Elements -->
+          <form id="dataForm">
+            <div class="row mb-3">
+              <div class="col-md-2"></div>
+              <div class="col-md-8 col-12">
+
+                <table class="table" id="examTable">
+                  <thead>
+                  <tr>
+                    <th>No.</th>
+                    <th>Exam</th>
+                    <th>Date</th>
+                    <th>Total</th>
+                    <th>Marks</th>
+                  </tr>
+                  </thead>
+
+                  <tbody>
+                  <tr th:each="result, stat : ${resultList}">
+                    <td th:text="${stat.index + 1}"></td>
+                    <td th:text="${result.examTitle}"></td>
+                    <td th:text="${result.examDate}"></td>
+                    <td th:text="${result.totalMarks}"></td>
+                    <td th:text="${result.correct}"></td>
+                  </tr>
+                  </tbody>
+                </table>
+
+
+              </div>
+            </div>
+
+          </form><!-- End General Form Elements -->
+        </div>
+      </div>
+
+    </div>
+    </div>
+  </main>
+  <!-- ======= Footer ======= -->
+<!--  <footer id="footer" class="footer" th:insert="~{include/footer}"></footer>-->
+<div class="col-lg-12 d-flex justify-content-center">
+  <div class="copyright">
+    <!--&copy; Copyright --><strong><span>Logical SoftTech</span></strong><!--. All Rights Reserved-->
+  </div>
+</div>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!--  <script>
+    $(document).ready(function () {
+        $('#dataForm').on('submit', function (event) {
+            event.preventDefault(); // Prevent the default form submission
+
+            var formData = {
+            name: $('#name').val(),
+            fatherName: $('#fatherName').val(),
+            mobile: $('#mobile').val(),
+            email: $('#email').val(),
+            password: $('#password').val(),
+            collageName: $('#collageName').val(),
+            course: $('#course').val(),
+            branch: $('#branch').val(),
+            alternateMobile: $('#alternateMobile').val(),
+            grad: $('#grad').val(),
+            cgpa: $('#cgpa').val(),
+            address: $('#address').val()
+        };
+
+            // Send the AJAX request
+            $.ajax({
+                type: 'POST',
+                url: baseUrl + 'studentAPI/create',
+                data: JSON.stringify(formData), // Convert data to JSON
+                contentType: 'application/json',
+                success: function (response) {
+                    // Check the API response
+                    if (response.result) {
+                       // alert(response.message);
+                        alert('Student register successfully.');
+                        window.location.href = baseUrl + 'login';
+                    } else {
+                        alert('Operation failed: ' + response.message);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error occurred:', status, error);
+                    alert('An error occurred while submitting the form. Please try again.');
+                }
+            });
+        });
+    });
+  </script>-->
+
+  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Vendor JS Files -->
+  <div  th:insert="~{include/vendor-js}"></div>
+</body>
+
+</html>

@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:insert="~{include/head}" >
+  <title>Home</title>
+</head>
+
+<body>
+
+  <!-- ======= Header ======= -->
+  <header th:insert="~{include/header}"  id="header" class="header fixed-top d-flex align-items-center"></header>
+  <!-- End Header -->
+
+  <!-- ======= Sidebar ======= -->
+  <aside id="sidebar" class="sidebar" th:insert="~{include/sidebar}"></aside><!-- End Sidebar-->
+
+  <main id="main" class="main">
+    <div class="pagetitle">
+      <h1>Exam Create</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="/home">Home</a></li>
+          <li class="breadcrumb-item"><a href="/exam">Exam Report</a></li>
+          <li class="breadcrumb-item active">Exam Create</li>
+        </ol>
+      </nav>
+    </div><!-- End Page Title -->
+
+    <div class="col-lg-12">
+
+      <div class="card">
+        <div class="card-body">
+          <!-- Advanced Form Elements -->
+          <form id="dataForm">
+            <div class="row mb-3">
+              <div class="col-sm-12 row">
+
+                <div class="form-floating mb-3 col-lg-8">
+                  <input type="text" class="form-control" id="title" name="title" placeholder="Enter exam title">
+                  <label for="title">Title</label>
+                </div>
+
+                <div class="form-floating mb-3 col-lg-4">
+                  <input type="text" class="form-control" id="examCode" name="examCode" required onblur="alreadyExistExamCode(this.value)" placeholder="Enter exam code">
+                  <label for="examCode">Exam Code</label>
+                </div>
+
+                <div class="form-floating mb-3 col-lg-4">
+                  <input type="date" class="form-control" id="examDate" name="examDate" placeholder="Enter exam date">
+                  <label for="examDate">Exam Date</label>
+                </div>
+
+                <div class="form-floating mb-3 col-lg-4">
+                  <input type="number" class="form-control" name="totalTime" required id="totalTime" placeholder="Enter exam time in minutes">
+                  <label for="totalTime">Total Exam Time</label>
+                </div>
+
+                <div class="form-check mb-3 col-lg-4 d-flex">
+                  <div class="col-lg-4 col-4 mt-3">
+                    <input class="form-check-input" type="checkbox" id="setAisActive" name="setAisActive">
+                    <label class="form-check-label" for="setAisActive">
+                      Set-A
+                    </label>
+                  </div>
+                  <div class="col-lg-4 col-4 mt-3">
+                    <input class="form-check-input" type="checkbox" id="setBisActive" name="setBisActive">
+                    <label class="form-check-label" for="setBisActive">
+                      Set-B
+                    </label>
+                  </div>
+                  <div class="col-lg-4 col-4 mt-3">
+                    <input class="form-check-input" type="checkbox" id="setCisActive" name="setCisActive">
+                    <label class="form-check-label" for="setCisActive">
+                      Set-C
+                    </label>
+                  </div>
+                </div>
+
+
+
+
+
+                <!--<div class="form-floating mb-3">
+                  <textarea class="form-control tinymce-editor" placeholder="Enter exam description" name="description" id="description" style="height: 100px;"></textarea>
+                  <label for="description">Exam Description</label>
+                </div>-->
+
+                <div class="quill-editor-full col-lg-12" id="description" ></div>
+
+                <div class="col-12 text-center mt-2">
+
+                  <button class="btn btn-primary w-100 col-3" style="width: 200px !important;" type="submit">SUBMIT</button>
+                </div>
+
+              </div>
+            </div>
+
+          </form><!-- End General Form Elements -->
+
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+  <!-- ======= Footer ======= -->
+  <footer id="footer" class="footer" th:insert="~{include/footer}">
+
+  </footer>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    $(document).ready(function () {
+        $('#dataForm').on('submit', function (event) {
+            event.preventDefault();
+
+            let setAisActive = 'No';
+            let setBisActive = 'No';
+            let setCisActive = 'No';
+
+            if ($("#setAisActive").is(":checked")) {
+                setAisActive = 'Yes';
+            }
+
+            if ($("#setBisActive").is(":checked")) {
+                setBisActive = 'Yes';
+            }
+
+            if ($("#setCisActive").is(":checked")) {
+                setCisActive = 'Yes';
+            }
+
+             var formData = {
+                title: $('#title').val(),
+                description: $('#description .ql-editor').html(),
+                examDate: $('#examDate').val(),
+                totalTime: $('#totalTime').val(),
+                examCode: $('#examCode').val(),
+                setAisActive:setAisActive,
+                setBisActive:setBisActive,
+                setCisActive:setCisActive
+            };
+
+            // Send the AJAX request
+            $.ajax({
+                type: 'POST',
+                url: baseUrl + 'examAPI/create',
+                data: JSON.stringify(formData), // Convert data to JSON
+                contentType: 'application/json',
+                success: function (response) {
+                    // Check the API response
+                    if (response.result) {
+                       // alert(response.message);
+                        alert('Exam inserted successfully.');
+                        window.location.href = baseUrl + 'examCreate';
+                    } else {
+                        alert('Operation failed: ' + response.message);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error occurred:', status, error);
+                    alert('An error occurred while submitting the form. Please try again.');
+                }
+            });
+        });
+    });
+  </script>
+
+  <script>
+
+    function alreadyExistExamCode(examCode){
+        if(examCode==''){
+            return;
+        }
+
+    $.ajax({
+        type: 'GET',
+        url: baseUrl + 'examAPI/existsCode/0/' + examCode,
+        success: function (response) {
+            if (response.result) {
+
+                alert('Exam code already registered.')
+                $('#examCode').val('');
+
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error('Error occurred:', status, error);
+            //alert('An error occurred while processing your request. Please try again, or contact support if the issue persists.');
+        }
+    });
+
+}
+
+  </script>
+
+  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Vendor JS Files -->
+  <div  th:insert="~{include/vendor-js}"></div>
+</body>
+
+</html>

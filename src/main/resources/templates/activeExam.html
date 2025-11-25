@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:insert="~{include/head}" >
+  <title>Home</title>
+</head>
+
+<body>
+<!--
+  <header th:insert="~{include/header}"  id="header" class="header fixed-top d-flex align-items-center"></header>
+  End Header -->
+
+  <!--
+  <aside id="sidebar" class="sidebar" th:insert="~{include/sidebar}"></aside>-->
+
+<header class="bg-dark py-3">
+  <div class="container">
+    <div class="d-flex justify-content-center">
+      <!-- Company Logo -->
+      <img th:src="@{/assets/img/logo.png}" alt="Company Logo" class="me-3" style="width: 200px; height: auto;">
+      <!-- Company Name -->
+      <h4 style="color:#fff;text:center;" class="pt-3">Exam Portal</h4>
+      <!-- Small Address -->
+      <small class="ms-3 pt-4 text-muted">Indore</small>
+    </div>
+  </div>
+</header>
+
+  <main class="d-flex justify-content-center col-lg-12 mt-3">
+
+    <div class="col-lg-12">
+
+<!--    <div class="pagetitle col-lg-12 d-flex justify-content-center">
+      <h6 style="margin-left: 25px;color:#0d6efd;"><span th:text="${result.examTitle}"></span>  Exam Date:<span th:text="${result.examDate}"></span>  Total Time:<span th:text="${result.examTotalTime}"></span>    Timer:<span id="timer" style="font-size: 20px;font-weight: bold;color:#000;" th:text="${result.endTime}"></span></h6>
+    <hr>-->
+
+      <div class="pagetitle col-lg-12 d-flex justify-content-center align-items-center">
+        <div class="text-center col-lg-12 row" style="padding: 15px; background-color: #f8f9fa; border-radius: 8px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);">
+
+          <div class="col-lg-12 ">
+            <h6 style="color: #0d6efd; font-size: 20px; font-weight: bold;">
+            <span th:text="${result.examTitle}"></span>
+          </h6>
+          </div>
+
+
+          <div class="col-lg-6 ">
+            <p style="color: #6c757d; font-size: 16px; margin-bottom: 5px;">
+              Exam Date: <span th:text="${result.examDate}" style="margin-right:40px;color:#000;"></span> Total Time: <span style="color:#000;" th:text="${result.examTotalTime}"></span>
+            </p>
+
+          </div>
+
+          <div class="col-lg-6 ">
+            <p style="color: #6c757d; font-size: 16px;">
+              Timer:
+              <span id="timer" style="font-size: 20px; font-weight: bold; color: #000;" th:text="${result.endTime}"></span>
+            </p>
+          </div>
+          <hr style="border-top: 2px solid #0d6efd; margin-top: 20px; width: 100%;"/>
+        </div>
+
+    </div><!-- End Page Title -->
+
+    <div class="container">
+
+      <div class="card">
+
+        <div class="card-body" th:each="question, stat : ${questionList}">
+          <h5 class="card-title"><span class="card-title" th:text="${stat.index + 1 +'. '+ question.question}"></span></h5>
+
+          <!-- Option 1 -->
+          <div class="form-check">
+            <input class="form-check-input select-color" type="checkbox" name="question1" style="border-color:#0d6efd;" id="option1" value="paris">
+            <label class="form-check-label" for="option1">
+              <span th:text="${ '(A) ' + question.option1}"></span>
+            </label>
+          </div>
+
+          <!-- Option 2 -->
+          <div class="form-check">
+            <input class="form-check-input select-color" type="checkbox" name="question1" id="option2" value="london">
+            <label class="form-check-label" for="option2">
+              (B) ParisLondon
+            </label>
+          </div>
+
+          <!-- Option 3 -->
+          <div class="form-check">
+            <input class="form-check-input select-color" type="checkbox" name="question1" id="option3" value="berlin">
+            <label class="form-check-label" for="option3">
+              (C) Berlin
+            </label>
+          </div>
+
+          <!-- Option 4 -->
+          <div class="form-check">
+            <input class="form-check-input select-color" type="checkbox" name="question1" id="option4" value="madrid">
+            <label class="form-check-label" for="option4">
+              (D) Madrid
+            </label>
+          </div>
+        </div>
+
+
+        <input type="hidden" id="endTime" th:value="${result.endTime}">
+      </div>
+
+    </div>
+    </div>
+  </main>
+  <!-- ======= Footer ======= -->
+<!--  <footer id="footer" class="footer" th:insert="~{include/footer}"></footer>-->
+<div class="footer col-lg-12 d-flex justify-content-center">
+  <div class="pull-right hidden-xs copyright">
+    <!--&copy; Copyright --><strong><span>Logical SoftTech</span></strong><!--. All Rights Reserved-->
+  </div>
+</div>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    $(document).ready(function () {
+         $('#dataForm').on('submit', function (event) {
+            event.preventDefault(); // Prevent the default form submission
+
+            var formData = {
+            name: $('#name').val(),
+            fatherName: $('#fatherName').val(),
+            mobile: $('#mobile').val(),
+            email: $('#email').val(),
+            password: $('#password').val(),
+            collageName: $('#collageName').val(),
+            course: $('#course').val(),
+            branch: $('#branch').val(),
+            alternateMobile: $('#alternateMobile').val(),
+            grad: $('#grad').val(),
+            cgpa: $('#cgpa').val(),
+            address: $('#address').val()
+        };
+
+            // Send the AJAX request
+            $.ajax({
+                type: 'POST',
+                url: baseUrl + 'studentAPI/create',
+                data: JSON.stringify(formData), // Convert data to JSON
+                contentType: 'application/json',
+                success: function (response) {
+                    // Check the API response
+                    if (response.result) {
+                       // alert(response.message);
+                        alert('Student register successfully.');
+                        window.location.href = baseUrl + 'login';
+                    } else {
+                        alert('Operation failed: ' + response.message);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error occurred:', status, error);
+                    alert('An error occurred while submitting the form. Please try again.');
+                }
+            });
+        });
+    });
+  </script>
+
+<script>
+  $(document).ready(function() {
+      // Trigger fullscreen on page load
+      document.documentElement.requestFullscreen().catch(err => {
+          console.error(`Error attempting to enable full-screen mode: ${err.message} (${err.name})`);
+      });
+  });
+</script>
+
+<script>
+  // Parse the end time from the server
+  const endTimeVal =  document.getElementById('endTime').value;
+  const endTime = new Date(endTimeVal); // Replace with your server's end time
+
+  // Function to update the timer
+  function updateTimer() {
+      const now = new Date(); // Current time
+      const timeDiff = endTime - now; // Time difference in milliseconds
+
+      if (timeDiff > 0) {
+          // Calculate hours, minutes, and seconds
+          const hours = Math.floor(timeDiff / (1000 * 60 * 60));
+          const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+          const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+
+          // Display the timer
+          document.getElementById("timer").textContent =
+              `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+      } else {
+          // When the countdown ends
+          document.getElementById("timer").textContent = "00:00:00";
+          clearInterval(timerInterval); // Stop the timer
+      }
+  }
+
+  // Update the timer every second
+  const timerInterval = setInterval(updateTimer, 1000);
+
+  // Initialize the timer immediately
+  updateTimer();
+</script>
+
+
+  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Vendor JS Files -->
+  <div  th:insert="~{include/vendor-js}"></div>
+</body>
+
+</html>

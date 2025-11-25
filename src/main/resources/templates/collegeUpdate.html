@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:insert="~{include/head}" >
+  <title>Home</title>
+</head>
+
+<body>
+
+  <!-- ======= Header ======= -->
+  <header th:insert="~{include/header}"  id="header" class="header fixed-top d-flex align-items-center"></header>
+  <!-- End Header -->
+
+  <!-- ======= Sidebar ======= -->
+  <aside id="sidebar" class="sidebar" th:insert="~{include/sidebar}"></aside><!-- End Sidebar-->
+
+  <main id="main" class="main">
+    <div class="pagetitle">
+      <h1>College Update</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="/home">Home</a></li>
+          <li class="breadcrumb-item"><a href="/college">College Report</a></li>
+          <li class="breadcrumb-item active">College Update</li>
+        </ol>
+      </nav>
+    </div><!-- End Page Title -->
+
+    <div class="col-lg-12">
+
+      <div class="card">
+        <div class="card-body">
+          <!-- Advanced Form Elements -->
+          <form id="dataForm">
+            <div class="row mb-3">
+              <div class="col-sm-12 row">
+
+                <div class="form-floating col-sm-6 mb-3">
+                  <input type="text" class="form-control" id="collegeName" th:value="${college.collegeName}" name="collegeName" placeholder="Enter collage title">
+                  <input type="hidden" id="collegeId" name="collegeId" th:value="${college.collegeId}">
+                  <label for="collegeName">College Name</label>
+                </div>
+
+                <div class="form-floating col-sm-6  mb-3">
+                  <select class="form-select" id="cityId" name="cityId" aria-label="State">
+                    <option value="0">Select City</option>
+                    <option th:each="city : ${cityList}" th:value="${city.cityId}" th:text="${city.cityName}" th:selected="${city.cityId==college.city.cityId}"></option>
+
+                  </select>
+                  <label for="cityId">City</label>
+                </div>
+
+
+                <div class="form-floating mb-3">
+                  <textarea class="form-control" placeholder="Enter collage address" name="collegeAddress" id="collegeAddress" th:text="${college.collegeAddress}" style="height: 100px;"></textarea>
+                  <label for="collegeAddress">Address</label>
+                </div>
+
+                <div class="col-md-2 mt-3">
+                  <div class="form-floating mb-3">
+                    <select class="form-select" id="isActive" name="isActive" aria-label="State">
+                      <option value="true" th:selected="${college.isActive==true}">Active</option>
+                      <option value="false" th:selected="${college.isActive==false}">Block</option>
+                    </select>
+                    <label for="isActive">Exam Status</label>
+                  </div>
+                </div>
+
+
+
+                <div class="col-12 text-center">
+                  <button class="btn btn-primary w-100" style="width: 200px !important;" type="submit">SUBMIT</button>
+                </div>
+
+              </div>
+            </div>
+
+          </form><!-- End General Form Elements -->
+
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+  <!-- ======= Footer ======= -->
+  <footer id="footer" class="footer" th:insert="~{include/footer}">
+
+  </footer>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    $(document).ready(function () {
+        $('#dataForm').on('submit', function (event) {
+            event.preventDefault(); // Prevent the default form submission
+
+             var formData = {
+                collegeName: $('#collegeName').val(),
+                collegeId: $('#collegeId').val(),
+                cityId: $('#cityId').val(),
+                isActive: $('#isActive').val(),
+                collegeAddress: $('#collegeAddress').val()
+            };
+
+            $.ajax({
+                type: 'PUT',
+                url: baseUrl + 'collegeAPI/update',
+                data: JSON.stringify(formData), // Convert data to JSON
+                contentType: 'application/json',
+                success: function (response) {
+                    // Check the API response
+                    if (response.result) {
+                       // alert(response.message);
+                        alert('College details updated successfully.');
+                        window.location.href = baseUrl + 'college';
+                    } else {
+                        alert('Operation failed: ' + response.message);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error occurred:', status, error);
+                    alert('An error occurred while submitting the form. Please try again.');
+                }
+            });
+        });
+    });
+  </script>
+
+  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Vendor JS Files -->
+  <div  th:insert="~{include/vendor-js}"></div>
+</body>
+
+</html>

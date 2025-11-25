@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:insert="~{include/head}" >
+  <title>Home</title>
+</head>
+
+<body>
+
+  <!-- ======= Header ======= -->
+  <header th:insert="~{include/header}"  id="header" class="header fixed-top d-flex align-items-center"></header>
+  <!-- End Header -->
+
+  <!-- ======= Sidebar ======= -->
+  <aside id="sidebar" class="sidebar" th:insert="~{include/sidebar}"></aside><!-- End Sidebar-->
+
+  <main id="main" class="main">
+    <div class="pagetitle">
+      <h1>Exam Report</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="/home">Home</a></li>
+          <li class="breadcrumb-item active">Exam Report</li>
+        </ol>
+      </nav>
+    </div><!-- End Page Title -->
+
+    <div class="col-lg-2 col-md-2 col-5">
+      <a href="/examCreate"><button class="btn btn-primary w-100">Create Exam</button></a>
+    </div>
+
+
+    <section class="section mt-3">
+      <div class="row">
+        <div class="col-lg-12">
+
+          <div class="card">
+            <div class="card-body scrollable-table">
+
+              <table class="table datatable" id="examTable">
+                <thead>
+                <tr>
+                  <th>No.</th>
+                  <th style="min-width: 200px;">Title</th>
+                  <th>Exam Date</th>
+                  <th>TotalTime</th>
+                  <th>Exam Code</th>
+                  <th>Set-A Question</th>
+                  <th>Set-B Question</th>
+                  <th>Set-C Question</th>
+                  <th>Result</th>
+                  <th>Action</th>
+                  <th>Description</th>
+                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+              </table>
+              <!-- End Table with stripped rows -->
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+  <!-- ======= Footer ======= -->
+  <footer id="footer" class="footer" th:insert="~{include/footer}">
+
+  </footer>
+
+  <script>
+    function getAllExam() {
+        // Fetch data from the API
+        $.ajax({
+            url: baseUrl + 'examAPI/getAll', // Replace with your API endpoint
+            method: 'GET',
+            success: function (response) {
+                if (response.result) {
+                    // Initialize table body
+                    let tableBody = '';
+
+                    // Iterate through the data array and append rows
+                    response.data.forEach(function (exam, index) {
+                    const formattedDate = exam.examDate
+                    ? new Date(exam.examDate).toLocaleDateString('en-GB') : '-';
+
+                let showExamSetA = String(exam.setAisActive).trim().toLowerCase() === 'yes';
+                let showExamSetB = String(exam.setBisActive).trim().toLowerCase() === 'yes';
+                let showExamSetC = String(exam.setCisActive).trim().toLowerCase() === 'yes';
+
+
+
+                        tableBody += `
+                            <tr>
+                                <td>${index + 1}</td>
+                                <td  style="${exam.isActive ? 'background: #8fed8f;' : ''}" >${exam.title || '-'}</td>
+                                <td>${formattedDate || '-'}</td>
+                                <td>${exam.totalTime || '-'}</td>
+                                <td>${exam.examCode || '-'}</td>
+                                <!-- Show/hide individual Exam Set options -->
+                            ${showExamSetA ? `
+                                <td><a class="main-color"
+                                    href="viewExamQuestion/${exam.examId || '0'}/A">
+                                    <i class="bi bi-pencil-square" style="margin-left: 5px;"></i>
+                                </a></td>
+                            ` : `<td>-</td>`}
+
+                            ${showExamSetB ? `
+                                <td><a class="main-color"
+                                    href="viewExamQuestion/${exam.examId || '0'}/B">
+                                    <i class="bi bi-pencil-square" style="margin-left: 5px;"></i>
+                                </a></td>
+                            ` : `<td>-</td>`}
+
+                            ${showExamSetC ? `
+                                <td><a class="main-color"
+                                    href="viewExamQuestion/${exam.examId || '0'}/C">
+                                    <i class="bi bi-pencil-square" style="margin-left: 5px;"></i>
+                                </a></td>
+                            ` : `<td>-</td>`}
+								<td  style="${exam.isActive ? 'background: #8fed8f;' : ''}" ><a class="main-color"
+										href="viewExamResult/${exam.examId || '0'}"><i
+											class="bi bi-card-list" style="margin-left: 5px;"></i></a></td>
+								<td><a class="main-color"
+										href="examUpdate/${exam.examId || '0'}"><i
+											class="bi bi-pencil-square" style="margin-left: 5px;"></i></a></td>
+								<td><div class="scrollable-text" style="height:45px;">${exam.description || '-'}</div></td>
+
+                            </tr>
+                        `;
+                    });
+
+                    // Append rows to the table body
+                    $('#examTable tbody').html(tableBody);
+
+                } else {
+                    alert('No records found: ' + response.message);
+                }
+            },
+            error: function () {
+                alert('Failed to fetch exam data.');
+            }
+        });
+    }
+    getAllExam();
+  </script>
+
+
+  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Vendor JS Files -->
+  <div  th:insert="~{include/vendor-js}"></div>
+</body>
+
+</html>

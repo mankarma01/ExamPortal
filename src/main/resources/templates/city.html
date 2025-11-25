@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:insert="~{include/head}" >
+  <title>Home</title>
+</head>
+
+<body>
+
+  <!-- ======= Header ======= -->
+  <header th:insert="~{include/header}"  id="header" class="header fixed-top d-flex align-items-center"></header>
+  <!-- End Header -->
+
+  <!-- ======= Sidebar ======= -->
+  <aside id="sidebar" class="sidebar" th:insert="~{include/sidebar}"></aside><!-- End Sidebar-->
+
+  <main id="main" class="main">
+    <div class="pagetitle">
+      <h1>City Report</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="/home">Home</a></li>
+          <li class="breadcrumb-item active">City Report</li>
+        </ol>
+      </nav>
+    </div><!-- End Page Title -->
+
+    <div class="col-lg-2 col-md-3 col-6">
+      <a href="/cityCreate"><button class="btn btn-primary w-100">Create City</button></a>
+    </div>
+
+    <section class="section mt-3">
+      <div class="row">
+        <div class="col-lg-12">
+
+          <div class="card">
+            <div class="card-body scrollable-table">
+
+              <table class="table datatable" id="examTable">
+                <thead>
+                <tr class="text-center">
+                  <th>No.</th>
+                  <th>Name</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+              </table>
+              <!-- End Table with stripped rows -->
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+  <!-- ======= Footer ======= -->
+  <footer id="footer" class="footer" th:insert="~{include/footer}"></footer>
+
+  <script>
+    function getAllExam() {
+        // Fetch data from the API
+        $.ajax({
+            url: baseUrl + 'cityAPI/getAll', // Replace with your API endpoint
+            method: 'GET',
+            success: function (response) {
+                if (response.result) {
+                    // Initialize table body
+                    let tableBody = '';
+
+                    // Iterate through the data array and append rows
+                    response.data.forEach(function (city, index) {
+
+                        tableBody += `
+                            <tr>
+                                <td>${index + 1}</td>
+                                <td>${city.cityName || '-'}</td>
+                                <td>${city.isActive ? 'Active' : 'Block'}</td>
+								<td><a class="main-color"
+										href="cityUpdate/${city.cityId || '0'}"><i
+											class="bi bi-pencil-square" style="margin-left: 5px;"></i></a>
+											<a href=""
+                                     onclick="deleteCity('${city.cityId}')">
+                                    <i class="bi bi-trash-fill" style="margin-left: 5px;"></i>
+                                  </a>
+                                </td>
+                            </tr>
+                        `;
+                    });
+
+                    // Append rows to the table body
+                    $('#examTable tbody').html(tableBody);
+
+                } else {
+                    alert('No records found: ' + response.message);
+                }
+            },
+            error: function () {
+                alert('Failed to fetch city data.');
+            }
+        });
+    }
+    getAllExam();
+  </script>
+
+
+  <script>
+    function deleteCity(questionId) {
+        // Confirm before deleting
+        if (confirm("Are you sure you want to delete this city?")) {
+            $.ajax({
+                url: baseUrl + 'cityAPI/delete/' + cityId,
+                type: 'DELETE',
+                success: function(response) {
+                    if(response.result){
+                    alert("City deleted successfully!");
+                    window.location.reload();
+                    }
+                },
+                error: function(xhr, status, error) {
+                    // Handle error
+                    console.error("Error deleting student:", error);
+                    alert("Failed to delete the City record. Please try again.");
+                }
+            });
+        }
+    }
+
+  </script>
+
+
+  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Vendor JS Files -->
+  <div  th:insert="~{include/vendor-js}"></div>
+</body>
+
+</html>

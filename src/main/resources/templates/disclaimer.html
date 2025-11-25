@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:insert="~{include/head}" >
+  <title>Home</title>
+</head>
+
+<body>
+<!--
+  <header th:insert="~{include/header}"  id="header" class="header fixed-top d-flex align-items-center"></header>
+  End Header -->
+
+<!--
+<aside id="sidebar" class="sidebar" th:insert="~{include/sidebar}"></aside>-->
+
+<header class="bg-dark py-3">
+  <div class="container">
+    <div class="d-flex justify-content-center">
+      <!-- Company Logo -->
+      <img th:src="@{/assets/img/logo.png}" alt="Company Logo" class="me-3" style="width: 200px; height: auto;">
+      <!-- Company Name -->
+      <h4 style="color:#fff;text:center;" class="pt-3">Exam Portal</h4>
+      <!-- Small Address -->
+      <small class="ms-3 pt-4 text-muted">Indore</small>
+    </div>
+  </div>
+</header>
+
+<main class="d-flex justify-content-center col-lg-12 mt-3">
+  <div class="col-lg-12">
+
+    <div class="pagetitle col-lg-12 d-flex justify-content-center">
+      <h4 style="margin-left: 25px;color:#0d6efd;">Disclaimer</h4>
+    </div><!-- End Page Title -->
+
+    <div class="col-lg-12">
+
+      <div class="col-lg-12 pt-2 mb-3 d-flex justify-content-center">
+        <div class="col-lg-2"></div>
+
+        <div class="col-lg-4">
+          <h5 class="card-title">Exam Details:</h5>
+
+          <div class="row">
+            <div class="col-lg-3 col-md-3 label ">Title</div>
+            <div class="col-lg-9 col-md-9" ><span th:text="${exam.title}"></span></div>
+          </div>
+
+          <div class="row">
+            <div class="col-lg-3 col-md-3 label">Date:</div>
+            <div class="col-lg-9 col-md-9" ><span th:text="${exam.examDate}"></span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-lg-3 col-md-3 label">Description:</div>
+            <div class="col-lg-9 col-md-9" ><span th:text="${exam.description}"></span></div>
+          </div>
+          <div class="row">
+            <div class="col-lg-3 col-md-3 label">Exam Time:</div>
+            <div class="col-lg-9 col-md-9" ><span th:text="${exam.totalTime}"></span><span>  Minutes</span></div>
+          </div>
+
+        </div>
+
+        <div class="col-lg-4">
+          <h5 class="card-title">Student Details:</h5>
+
+          <div class="row">
+            <div class="col-lg-3 col-md-3 label ">Name</div>
+            <div class="col-lg-9 col-md-9" ><span th:text="${student.name}"></span></div>
+          </div>
+
+          <div class="row">
+            <div class="col-lg-3 col-md-3 label">Father Name:</div>
+            <div class="col-lg-9 col-md-9" ><span th:text="${student.fatherName}"></span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-lg-3 col-md-3 label">Email:</div>
+            <div class="col-lg-9 col-md-9" ><span th:text="${student.email}"></span></div>
+          </div>
+          <div class="row">
+            <div class="col-lg-3 col-md-3 label">Collage Name:</div>
+            <div class="col-lg-9 col-md-9" ><span th:text="${student.collageName}"></span><span>  Minutes</span></div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+      <div class="col-lg-12 row">
+
+        <div class="col-lg-2"></div>
+
+        <div class=" col-lg-8">
+          <hr>
+              <h5 class="card-title">Terms : <span th:text="${exam.termTitle}" style="color:#000;font-size:16px;"></span></h5>
+              <p th:text="${exam.termDescription}"></p>
+        </div>
+        <div class=" col-lg-2"></div>
+        <div class=" col-lg-2"></div>
+        <div class=" col-lg-8">
+          <hr>
+          <h5 class="card-title">Condition : <span th:text="${exam.conditionTitle}" style="color:#000;font-size:16px;"></span></h5>
+
+          <p th:text="${exam.conditionDescription}"></p>
+          <hr>
+        </div>
+        <div class=" col-lg-2"></div>
+
+        <div class=" col-lg-2"></div>
+        <div class=" col-lg-8">
+          <hr>
+          <h5 class="card-title">Rules:</h5>
+
+          <p th:text="${exam.examRules}"></p>
+          <hr>
+        </div>
+        <div class=" col-lg-2"></div>
+
+      </div>
+    <div class="col-lg-12 d-flex justify-content-center">
+      <input type="hidden" id="examId" name="examId" th:value="${exam.examId}">
+      <input type="hidden" id="studentId" name="studentId" th:value="${student.studentId}">
+      <div class="col-2 text-center">
+        <button class="btn btn-primary w-100" id="startExam">Start Exam</button>
+      </div>
+    </div>
+
+    </div>
+
+</main>
+<!-- ======= Footer ======= -->
+<!--  <footer id="footer" class="footer" th:insert="~{include/footer}"></footer>-->
+<div class="col-lg-12 d-flex justify-content-center mt-5">
+  <div class="copyright">
+    <!--&copy; Copyright --><strong><span>Logical SoftTech</span></strong><!--. All Rights Reserved-->
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+ <script>
+$(document).ready(function () {
+    $('#startExam').on('click', function (event) {
+        event.preventDefault(); // Prevent default button behavior
+
+        // Confirm dialog
+        let confirmStatus = confirm("Are you sure you want to start the exam?");
+        if (!confirmStatus) {
+            alert("Exam not started.");
+            return;
+        }
+
+        // Prepare form data
+        var examId = $('#examId').val();
+        var studentId = $('#studentId').val();
+
+        // First AJAX request to start the exam
+        $.ajax({
+            type: 'POST',
+            url: baseUrl + 'resultAPI/createExam', // Ensure baseUrl is properly defined
+            data: {
+                studentId: studentId,
+                examId: examId
+            },
+            success: function (response) {
+                if (response.result) {
+                    var resultId = response.data; // Extract resultId from response
+                    alert(response.message);
+
+                    // Call examStart function
+                    examStart(studentId, examId, resultId);
+                } else {
+                    alert('Operation failed: ' + response.message);
+                    window.location.reload();
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error('Error occurred:', status, error);
+                alert('An error occurred while starting the exam. Please try again.');
+            }
+        });
+    });
+
+    // Function to handle examStart
+function examStart(studentId, examId, resultId) {
+    // Construct the URL with query parameters
+    const url = `${baseUrl}activeExam?studentId=${studentId}&examId=${examId}&resultId=${resultId}`;
+
+    // Open the URL in a new tab and request full screen
+    const newTab = window.open(url, '_blank');
+
+    // Focus on the new tab
+    if (newTab) {
+        newTab.focus();
+
+        // Try to make it full screen (not all browsers support this)
+        newTab.document.body.requestFullscreen?.();
+    } else {
+        alert('Failed to open the new tab. Please check if pop-ups are allowed in your browser.');
+    }
+}
+
+});
+ </script>
+
+<a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+<!-- Vendor JS Files -->
+<div  th:insert="~{include/vendor-js}"></div>
+</body>
+
+</html>

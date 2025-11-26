@@ -12,8 +12,8 @@ public class CorsConfig {
     @Bean
     public CorsFilter corsFilter() {
         CorsConfiguration config = new CorsConfiguration();
-        config.addAllowedOrigin("http://127.0.0.1:5500"); // Add your frontend origin
-        config.addAllowedOrigin("http://157.66.191.36:5500");
+        config.addAllowedOrigin("https://fastidious-parfait-a42fa2.netlify.app"); // Add your frontend origin
+        config.addAllowedOrigin("https://examportalbackend-production.up.railway.app");
         config.addAllowedHeader("*"); // Allow all headers
         config.addAllowedMethod("*"); // Allow all HTTP methods (GET, POST, etc.)
         config.setAllowCredentials(true); // Allow credentials like cookies

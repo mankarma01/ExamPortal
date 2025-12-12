@@ -26,10 +26,10 @@
 
     <div class="row">
 
-<!--    <div class="col-3">
+<!--     <div class="col-3">
       <a href="/studentRegistration"><button class="btn btn-primary w-100">Add Student</button></a>
-    </div>-->
-
+    </div>
+ -->
     </div>
 
     <section class="section mt-3">
@@ -84,13 +84,13 @@
                   <th>Mobile</th>
                   <th>Email</th>
                   <th>City</th>
-                  <th>Collage</th>
+                  <th>College</th>
                   <th>Course</th>
                   <th>Branch</th>
                   <th>Technology</th>
-                  <th>Alt Mobile</th>
+                  <th>All Mobile</th>
                   <th>Address</th>
-                  <th>Grad</th>
+                  <th>Grad.</th>
                   <th>CGPA</th>
                   <th data-type="date" data-format="YYYY/DD/MM">Date Time</th>
                   <th>Delete</th>
@@ -123,6 +123,7 @@
         type: 'GET',
         url: baseUrl + 'collegeAPI/getActiveByCity/' + cityId ,
         success: function (response) {
+        console.log(response);
             if (response.result) {
 
                 let selectOption = '<option value="0">Select College</option>';
@@ -198,6 +199,7 @@
         url: baseUrl + 'studentAPI/getByCityCollege/' + cityId + '/'+ collegeId,
         method: 'GET',
         success: function (response) {
+       console.log(response);
             if (response.result) {
                 // Initialize table body
                 let tableBody = '';

@@ -34,6 +34,8 @@ public class Student {
     private String address;
     private Float cgpa;
     private String technology;
+    @Transient   // 🔥 THIS IS REQUIRED
+    private Long collegeId;
 
     @ManyToOne(fetch = FetchType.LAZY )
     @JoinColumn(name = "collegeId", referencedColumnName = "collegeId")

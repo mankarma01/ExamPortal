@@ -19,7 +19,7 @@ public interface ResultRepository extends JpaRepository<Result, Long> {
 
     List<Result> findByStudentStudentId(Long studentId);
     Result findByStudentStudentIdAndIsActive(Long studentId, boolean status);
-
+    Result findByStudentStudentIdAndExamExamId(Long studentId, Long examId);
 /*
     List<Result> findByExamExamIdAndStudentCollegeCollegeIdAndExamDateAndCorrectGreaterThanEqual( Long examId,Long collegeId , LocalDate examDate, int marks);
     List<Result> findByExamExamIdAndStudentCollegeCollegeIdAndCorrectGreaterThanEqual(Long examId,Long collegeId , int marks);

@@ -10,8 +10,11 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -23,7 +26,31 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login", "assets/**").permitAll()
+                		.requestMatchers(
+                		        "/login",
+                		        "/login.html",
+
+                		        // Static resources
+                		        "/assets/**",
+                		        "/css/**",
+                		        "/js/**",
+                		        "/images/**",
+                		        "/static/**",
+                		        "/webjars/**",
+                		        "/favicon.ico",
+
+                		        // APIs
+                		        "/cityAPI/**",
+                		        "/studentAPI/**",
+                		        "/collegeAPI/**",
+                		        "/examAPI/**",
+                		        "/examRulesAPI/**",
+                		        "/questionAPI/**",
+                		        "/questionFillAPI/**",
+                		        "/resultAPI/**",
+                		        "/termsConditionAPI/**"
+                		).permitAll()
+
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
@@ -44,7 +71,7 @@ public class SecurityConfig {
         return http.build();
     }
 
-/*
+
    @Bean
     public UserDetailsService userDetailsService() {
         UserDetails user = User.builder()
@@ -55,17 +82,17 @@ public class SecurityConfig {
 
         return new InMemoryUserDetailsManager(user);
     }
-*/
+
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    @Bean
-    public UserDetailsService userDetailsService() {
-        return new CustomUserDetailsService();
-    }
+//    @Bean
+//    public UserDetailsService userDetailsService() {
+//        return new CustomUserDetailsService();
+//    }
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {

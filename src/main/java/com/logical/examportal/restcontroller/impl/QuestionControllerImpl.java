@@ -1,9 +1,13 @@
 package com.logical.examportal.restcontroller.impl;
 
 import com.logical.examportal.entity.Question;
+import com.logical.examportal.model.response.GenericResponse;
 import com.logical.examportal.model.response.MessageResponse;
 import com.logical.examportal.restcontroller.QuestionController;
 import com.logical.examportal.service.QuestionService;
+
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -123,4 +127,31 @@ public class QuestionControllerImpl implements QuestionController {
                     HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    
+    @Override
+    public ResponseEntity<?> getByExamId(Long examId, Character examSet) {
+        try {
+            return questionService.getByExamId(examId, examSet);
+        } catch (Exception e) {
+            logger.info(e.toString());
+            return new ResponseEntity<>(
+                    new MessageResponse(false,
+                            "Something went wrong...Don't worry we are figuring out what went wrong...!"),
+                    HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @Override
+    public ResponseEntity<?> getByExamIdAndCode(Long examId, Character examSet, String examCode) {
+        try {
+            return questionService.getByExamIdAndCode(examId, examSet, examCode);
+        } catch (Exception e) {
+            logger.info(e.toString());
+            return new ResponseEntity<>(
+                    new MessageResponse(false,
+                            "Something went wrong...Don't worry we are figuring out what went wrong...!"),
+                    HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    
 }

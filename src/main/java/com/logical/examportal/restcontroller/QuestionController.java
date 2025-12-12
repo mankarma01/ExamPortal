@@ -31,5 +31,11 @@ public interface QuestionController {
 
     @DeleteMapping("/deleteAll/{examId}/{examSet}")
     ResponseEntity<?>deleteQuestionSet(@PathVariable("examId") Long examId, @PathVariable("examSet") Character examSet);
+    
+    @GetMapping("/getByExamIdAndCode/{examId}/{examSet}/{examCode}")
+    ResponseEntity<?>getByExamIdAndCode(@PathVariable("examId") Long examId, @PathVariable("examSet") Character examSet, @PathVariable("examCode") String examCode);
 
+    
+	ResponseEntity<?> getByExamId(Long examId, Character examSet);
+    
 }

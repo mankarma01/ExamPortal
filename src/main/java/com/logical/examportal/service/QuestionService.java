@@ -17,4 +17,7 @@ public interface QuestionService {
    ResponseEntity<?> update(Question question);
    ResponseEntity<?> deleteById(Long questionId);
    ResponseEntity<?> deleteQuestionSet(Long examId, Character examSet);
+   ResponseEntity<?> getByExamId(Long examId, Character examSet);
+   ResponseEntity<?> getByExamIdAndCode(Long examId, Character examSet, String examCode);
 }
+

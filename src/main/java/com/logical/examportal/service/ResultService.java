@@ -12,4 +12,8 @@ public interface ResultService {
     ResponseEntity<?> createExam(Long studentId, Long examId);
     ResponseEntity<?> deleteById(Long resultId);
     ResponseEntity<?> changeStatusById(Long resultId);
+    ResponseEntity<?> startExam(String email);
+    ResponseEntity<?> submitExam(Long resultId);
+    ResponseEntity<?> viewScore(String email);
+    ResponseEntity<?> maxAttempt(Long resultId);
 }

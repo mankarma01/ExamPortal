@@ -1,12 +1,14 @@
 package com.logical.examportal.service.impl;
 
 import com.logical.examportal.dto.StudentResultDto;
+import com.logical.examportal.entity.College;
 import com.logical.examportal.entity.Exam;
 import com.logical.examportal.entity.Result;
 import com.logical.examportal.entity.Student;
 import com.logical.examportal.model.response.GenericResponse;
 import com.logical.examportal.model.response.MessageResponse;
 import com.logical.examportal.model.response.StudentResponse;
+import com.logical.examportal.repository.CollegeRepository;
 import com.logical.examportal.repository.ExamRepository;
 import com.logical.examportal.repository.ResultRepository;
 import com.logical.examportal.repository.StudentRepository;
@@ -18,7 +20,9 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -31,13 +35,34 @@ public class StudentServiceImpl implements StudentService {
 
     @Autowired
     ExamRepository examRepository;
+    
+    @Autowired
+    CollegeRepository collegeRepository;
 
     @Override
     public ResponseEntity<?> create(Student student) {
         student.setDateTime(LocalDateTime.now());
+        Optional<Student> studentOptional = studentRepository.findByEmail(student.getEmail());
+        if(studentOptional.isPresent()){
+            return new ResponseEntity<>( new MessageResponse(false, "Email already exists."), HttpStatus.OK);
+        }
+        Optional<Student> studentOptionalEnroll = studentRepository.findByEnrollmentId(student.getEnrollmentId());
+        if(studentOptionalEnroll.isPresent()){
+            return new ResponseEntity<>( new MessageResponse(false, "Enrollment ID already exists."), HttpStatus.OK);
+        }
+        if(student.getEnrollmentId().equalsIgnoreCase("")){
+            return new ResponseEntity<>( new MessageResponse(false, "Enrollment ID not found."), HttpStatus.OK);
+        }
+        Optional<College> college =  collegeRepository.findById(student.getCollegeId());
+        if(college.isPresent()){
+            student.setCollege(college.get());
+        }else{
+            return new ResponseEntity<>( new MessageResponse(false, "College ID not found."), HttpStatus.OK);
+        }
         studentRepository.save(student);
-        return new ResponseEntity<>( new MessageResponse(true, "Record created successfully."), HttpStatus.OK);
+        return new ResponseEntity<>( new GenericResponse<>(true, "Record created successfully.", student.getStudentId()), HttpStatus.OK);
     }
+
 
     @Override
     public ResponseEntity<?> getAll() {
@@ -124,7 +149,6 @@ public class StudentServiceImpl implements StudentService {
         }
         else{
             return new ResponseEntity<>( new MessageResponse(false, "Record not deleted or invalid ID."), HttpStatus.NOT_FOUND);
-
         }
     }
 

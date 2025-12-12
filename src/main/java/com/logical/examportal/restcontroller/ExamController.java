@@ -25,5 +25,11 @@ public interface ExamController {
     @GetMapping("/existsCode/{examId}/{examCode}")
     ResponseEntity<?> alreadyExistsCode(@PathVariable("examId") Long examId, @PathVariable("examCode") String examCode);
 
+    @GetMapping("/getActive")
+    ResponseEntity<?> getActiveList();
+    
+    @GetMapping("/getByCode/{examCode}")
+    ResponseEntity<?> getExamByCode(@PathVariable("examCode") String examCode);
+
 
 }

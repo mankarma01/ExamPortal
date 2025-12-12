@@ -82,5 +82,4 @@ public class CityControllerImpl implements CityController {
                     HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
 }

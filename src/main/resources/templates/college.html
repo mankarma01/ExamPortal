@@ -70,7 +70,8 @@
             url: baseUrl + 'collegeAPI/getAll', // Replace with your API endpoint
             method: 'GET',
             success: function (response) {
-                if (response.result) {
+            console.log(response.data);
+                if (response.data) {
                     // Initialize table body
                     let tableBody = '';
 
@@ -81,7 +82,7 @@
                             <tr>
                                 <td>${index + 1}</td>
                                 <td>${college.collegeName || '-'}</td>
-                                <td>${college.city.cityName || '-'}</td>
+                                <td>${college.city?.cityName || '-'}</td>
                                 <td>${college.collegeAddress || '-'}</td>
                                 <td>${college.isActive ? 'Active' : 'Block'}</td>
 								<td><a class="main-color"

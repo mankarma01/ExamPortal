@@ -93,5 +93,25 @@ public class ExamServiceImpl implements ExamService {
         }
         return new ResponseEntity<>( new MessageResponse(false, "Exam code not exist."), HttpStatus.OK);
     }
+    @Override
+    public ResponseEntity<?> getActiveList() {
+        List<Exam> examList =  examRepository.findByIsActiveTrue();
+        for(Exam currExam : examList){
+            currExam.setExamCode("");
+        }
+        return new ResponseEntity<>( new GenericResponse<>(true, "Active Records get successfully", examList), HttpStatus.OK);
+    }
+    @Override
+    public ResponseEntity<?> getExamByCode(String examCode) {
+        Optional<Exam> exam =  examRepository.findByExamCode(examCode);
+//        System.out.print(exam.get());
+        if(exam.isPresent()){
+            if(!exam.get().getIsActive()){
+                return new ResponseEntity<>( new GenericResponse<>(false, "Exam is not activated.", null), HttpStatus.OK);
+            }
+            return new ResponseEntity<>( new GenericResponse<>(true, "Active exam record get successfully.", exam.get()), HttpStatus.OK);
+        }
 
+        return new ResponseEntity<>( new GenericResponse<>(false, "Exam code is incorrect.", null), HttpStatus.OK);
+    }
 }

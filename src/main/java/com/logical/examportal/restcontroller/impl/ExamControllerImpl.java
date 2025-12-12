@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -95,4 +96,29 @@ public class ExamControllerImpl implements ExamController {
         }
     }
 
+	@Override
+	public ResponseEntity<?> getActiveList() {
+		// TODO Auto-generated method stub
+		try {
+            return examService.getActiveList();
+        } catch (Exception e) {
+            logger.info(e.toString());
+            return new ResponseEntity<>(
+                    new MessageResponse(false,
+                            "Something went wrong...Don't worry we are figuring out what went wrong...!"),
+                    HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+	}
+	 @Override
+	    public ResponseEntity<?> getExamByCode(@PathVariable String examCode) {
+	        try {
+	            return examService.getExamByCode(examCode);
+	        } catch (Exception e) {
+	            logger.info(e.toString());
+	            return new ResponseEntity<>(
+	                    new MessageResponse(false,
+	                            "Something went wrong...Don't worry we are figuring out what went wrong...!"),
+	                    HttpStatus.INTERNAL_SERVER_ERROR);
+	        }
+	    }
 }

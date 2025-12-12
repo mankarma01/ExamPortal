@@ -81,5 +81,4 @@ public class TermsConditionControllerImpl implements TermsConditionController {
                     HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
 }

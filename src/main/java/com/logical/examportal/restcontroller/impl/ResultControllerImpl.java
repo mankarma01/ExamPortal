@@ -66,6 +66,20 @@ public class ResultControllerImpl implements ResultController {
                     HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    
+    @Override
+    public ResponseEntity<?> startExam(String email) {
+        try {
+            return resultService.startExam(email);
+        } catch (Exception e) {
+            logger.error("Error in startExam: ", e);
+            return new ResponseEntity<>(
+                    new MessageResponse(false, "Something went wrong while starting exam."),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+            );
+        }
+    }
+
 
     @Override
     public ResponseEntity<?> getAllByExamId(Long examId, String resultStatus, int minimumMarks, String examDate, Long collegeId) {
@@ -118,4 +132,41 @@ public class ResultControllerImpl implements ResultController {
                     HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    @Override
+    public ResponseEntity<?> submitExam(Long resultId) {
+        try {
+            return resultService.submitExam(resultId);
+        } catch (Exception e) {
+            logger.info(e.toString());
+            return new ResponseEntity<>(
+                    new MessageResponse(false,
+                            "Something went wrong...Don't worry we are figuring out what went wrong...!"),
+                    HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    @Override
+    public ResponseEntity<?> viewScore(String email) {
+        try {
+            return resultService.viewScore(email);
+        } catch (Exception e) {
+            logger.info(e.toString());
+            return new ResponseEntity<>(
+                    new MessageResponse(false,
+                            "Something went wrong...Don't worry we are figuring out what went wrong...!"),
+                    HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    @Override
+    public ResponseEntity<?> maxAttempt(Long resultId) {
+        try {
+            return resultService.maxAttempt(resultId);
+        } catch (Exception e) {
+            logger.info(e.toString());
+            return new ResponseEntity<>(
+                    new MessageResponse(false,
+                            "Something went wrong...Don't worry we are figuring out what went wrong...!"),
+                    HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 }

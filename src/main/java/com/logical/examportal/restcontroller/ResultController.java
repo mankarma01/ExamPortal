@@ -13,6 +13,12 @@ public interface ResultController {
     @GetMapping("/get/{resultId}")
     ResponseEntity<?>getById(@PathVariable("resultId") Long resultId);
 
+    @GetMapping("/startExam/{email}")
+    ResponseEntity<?> startExam(@PathVariable("email") String email);
+
+    @GetMapping("/viewScore/{email}")
+    ResponseEntity<?>viewScore(@PathVariable("email") String email);
+
     @GetMapping("/getAll")
     ResponseEntity<?>getAll();
 
@@ -29,5 +35,11 @@ public interface ResultController {
 
     @PostMapping("/createExam")
     ResponseEntity<?>createExam(@RequestParam("studentId") Long studentId, @RequestParam("examId") Long examId);
+    
+    @GetMapping("/submitExam/{resultId}")
+    ResponseEntity<?>submitExam(@PathVariable("resultId") Long resultId);
+    
+    @GetMapping("/maxAttempt/{resultId}")
+    ResponseEntity<?>maxAttempt(@PathVariable("resultId") Long resultId);
 
 }

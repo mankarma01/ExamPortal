@@ -22,6 +22,8 @@ public class StudentControllerImpl implements StudentController {
     @Override
     public ResponseEntity<?> create(Student student) {
         try {
+        	System.out.println(student);
+        	
             return studentService.create(student);
         } catch (Exception e) {
             logger.info(e.toString());

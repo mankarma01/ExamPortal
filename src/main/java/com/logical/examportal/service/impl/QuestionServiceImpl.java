@@ -1,8 +1,10 @@
 package com.logical.examportal.service.impl;
 
+import com.logical.examportal.entity.Exam;
 import com.logical.examportal.entity.Question;
 import com.logical.examportal.model.response.GenericResponse;
 import com.logical.examportal.model.response.MessageResponse;
+import com.logical.examportal.repository.ExamRepository;
 import com.logical.examportal.repository.QuestionRepository;
 import com.logical.examportal.service.QuestionService;
 import org.apache.commons.csv.CSVFormat;
@@ -27,6 +29,8 @@ import java.util.Optional;
 public class QuestionServiceImpl implements QuestionService {
     @Autowired
     QuestionRepository questionRepository;
+    @Autowired
+    ExamRepository examRepository;
 
     @Override
     public ResponseEntity<?> create(Question question) {
@@ -169,4 +173,32 @@ public class QuestionServiceImpl implements QuestionService {
         return new ResponseEntity<>( new MessageResponse(true, "Records deleted successfully."), HttpStatus.OK);
 
     }
+    @Override
+    public ResponseEntity<?> getByExamId(Long examId, Character examSet) {
+        List<Question> questionList = questionRepository.findByExamIdAndExamSet(examId, examSet);
+
+        questionList.forEach(question -> question.setCorrectAnswer(null));
+
+        return new ResponseEntity<>( new GenericResponse<>(true, "Records get successfully", questionList), HttpStatus.OK);
+    }
+    @Override
+    public ResponseEntity<?> getByExamIdAndCode(Long examId, Character examSet, String examCode) {
+
+        Optional<Exam> examOptional =  examRepository.findByExamCode(examCode);
+        System.out.println("Test Start");
+        if(examOptional.isPresent()){
+            if(!examOptional.get().getExamId().equals(examId)){
+                return new ResponseEntity<>( new MessageResponse(true, "Records not found Invalid code"), HttpStatus.NOT_FOUND);
+            }
+        }else {
+            return new ResponseEntity<>( new MessageResponse(true, "Records not found Invalid code"), HttpStatus.NOT_FOUND);
+        }
+
+        List<Question> questionList = questionRepository.findByExamIdAndExamSet(examId, examSet);
+
+        questionList.forEach(question -> question.setCorrectAnswer(null));
+
+        return new ResponseEntity<>( new GenericResponse<>(true, "Records get successfully", questionList), HttpStatus.OK);
+    }
+
 }

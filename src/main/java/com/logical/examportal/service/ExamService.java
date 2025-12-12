@@ -11,5 +11,6 @@ public interface ExamService {
     ResponseEntity<?> update(Exam exam);
     ResponseEntity<?> deleteById(Long examId);
     ResponseEntity<?> alreadyExistsCode(Long examId, String examCode);
-
+    ResponseEntity<?> getActiveList();
+    ResponseEntity<?> getExamByCode(String examCode);
 }

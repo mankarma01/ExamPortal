@@ -16,5 +16,4 @@ public interface AdminController {
     @PutMapping("/updatePassword")
     ResponseEntity<?> updateAdminPassword(@RequestBody Admin admin);
 
-
 }

@@ -1,6 +1,4 @@
 package com.logical.examportal.entity;
-
-
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;

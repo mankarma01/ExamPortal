@@ -10,5 +10,4 @@ public class ExamPortalApplication {
 		SpringApplication.run(ExamPortalApplication.class, args);
 		System.out.println("Logical exam portal running.....");
 	}
-
 }

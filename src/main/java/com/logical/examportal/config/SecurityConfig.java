@@ -133,27 +133,27 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-//        http
-//            .cors(cors -> cors.configurationSource(corsConfigurationSource()))  // ✅ Fixed syntax
-//            .csrf(AbstractHttpConfigurer::disable)
-//            .authorizeHttpRequests(auth -> auth
-//                .requestMatchers(
-//                    "/login", "/login.html",
-//                    "/assets/**", "/css/**", "/js/**", "/images/**", "/static/**", 
-//                    "/webjars/**", "/favicon.ico",
-//                    "/cityAPI/**", "/studentAPI/**", "/collegeAPI/**", "/examAPI/**",
-//                    "/examRulesAPI/**", "/questionAPI/**", "/questionFillAPI/**",
-//                    "/resultAPI/**", "/termsConditionAPI/**"
-//                ).permitAll()
-//                .anyRequest().authenticated()
-//            )
-            http
-            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+        http
+            .cors(cors -> cors.configurationSource(corsConfigurationSource()))  // ✅ Fixed syntax
             .csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                .anyRequest().permitAll()
+                .requestMatchers(
+                    "/login", "/login.html",
+                    "/assets/**", "/css/**", "/js/**", "/images/**", "/static/**", 
+                    "/webjars/**", "/favicon.ico",
+                    "/cityAPI/**", "/studentAPI/**", "/collegeAPI/**", "/examAPI/**",
+                    "/examRulesAPI/**", "/questionAPI/**", "/questionFillAPI/**",
+                    "/resultAPI/**", "/termsConditionAPI/**"
+                ).permitAll()
+                .anyRequest().authenticated()
             )
+//            http
+//            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+//            .csrf(AbstractHttpConfigurer::disable)
+//            .authorizeHttpRequests(auth -> auth
+//                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+//                .anyRequest().permitAll()
+//            )
 
             .formLogin(form -> form
                 .loginPage("/login")

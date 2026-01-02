@@ -1,4 +1,7 @@
 package com.logical.examportal.service.impl;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 
 import com.logical.examportal.dto.ResultIdExamSetDto;
 import com.logical.examportal.dto.ScoreDetails;
@@ -116,18 +119,40 @@ public class ResultServiceImpl implements ResultService {
     @Override
     public ResponseEntity<?> getById(Long resultId) {
 
-        Optional<Result> result = resultRepository.findById(resultId);
+        Optional<Result> resultOpt = resultRepository.findById(resultId);
 
-        if(result.isPresent()){
-            Optional<Student> student = studentRepository.findById(result.get().getStudent().getStudentId());
-            Optional<Exam> exam = examRepository.findById(result.get().getExam().getExamId());
-            result.get().setStudent(student.get());
-            result.get().setExam(exam.get());
-            return new ResponseEntity<>( new GenericResponse<>(true, "Records get successfully", result), HttpStatus.OK);
+        if (resultOpt.isPresent()) {
+
+            Result result = resultOpt.get();
+
+            ZoneId serverZone = ZoneId.systemDefault();
+
+            String endTimeUtc = result.getEndTime()
+                    .atZone(serverZone)
+                    .withZoneSameInstant(ZoneOffset.UTC)
+                    .toInstant()
+                    .toString();
+
+            String serverTimeUtc = ZonedDateTime.now(serverZone)
+                    .withZoneSameInstant(ZoneOffset.UTC)
+                    .toInstant()
+                    .toString();
+
+            Map<String, Object> data = new HashMap<>();
+            data.put("result", result);
+            data.put("endTimeUtc", endTimeUtc);
+            data.put("serverTimeUtc", serverTimeUtc);
+
+            return new ResponseEntity<>(
+                    new GenericResponse<>(true, "Result fetched successfully", data),
+                    HttpStatus.OK
+            );
         }
-        else{
-            return new ResponseEntity<>( new MessageResponse(false, "Record not found or invalid ID."), HttpStatus.NOT_FOUND);
-        }
+
+        return new ResponseEntity<>(
+                new MessageResponse(false, "Result not found"),
+                HttpStatus.NOT_FOUND
+        );
     }
 
     @Override
@@ -375,11 +400,39 @@ public class ResultServiceImpl implements ResultService {
         result.setExamDate(exam.getExamDate());
         result.setExamTotalTime(exam.getTotalTime());
         result.setEndTime(result.getStartTime().plusMinutes(exam.getTotalTime()));
+//        Result savedResult = resultRepository.save(result);
+//        ResultIdExamSetDto resultExamSet = new ResultIdExamSetDto(savedResult.getResultId(), savedResult.getExamSet(), savedResult.getMaxAttempt());
+//        return new ResponseEntity<>(new GenericResponse<>(true, "The exam session has been created successfully.", resultExamSet), HttpStatus.OK);
         Result savedResult = resultRepository.save(result);
-        ResultIdExamSetDto resultExamSet = new ResultIdExamSetDto(savedResult.getResultId(), savedResult.getExamSet(), savedResult.getMaxAttempt());
-        return new ResponseEntity<>(new GenericResponse<>(true, "The exam session has been created successfully.", resultExamSet), HttpStatus.OK);
-    }
 
+        ZoneId serverZone = ZoneId.systemDefault(); // India
+        ZoneOffset utcOffset = ZoneOffset.UTC;
+
+        // Convert endTime to UTC
+        String endTimeUtc = savedResult.getEndTime()
+                .atZone(serverZone)
+                .withZoneSameInstant(utcOffset)
+                .toInstant()
+                .toString();
+
+        // Current server time in UTC
+        String serverTimeUtc = ZonedDateTime.now(serverZone)
+                .withZoneSameInstant(utcOffset)
+                .toInstant()
+                .toString();
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("resultId", savedResult.getResultId());
+        data.put("examSet", savedResult.getExamSet());
+        data.put("endTimeUtc", endTimeUtc);
+        data.put("serverTimeUtc", serverTimeUtc);
+
+        return new ResponseEntity<>(
+                new GenericResponse<>(true, "The exam session has been created successfully.", data),
+                HttpStatus.OK
+        );
+
+    }
 
     @Override
     @Transactional

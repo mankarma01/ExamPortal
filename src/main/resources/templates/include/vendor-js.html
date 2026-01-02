@@ -20,6 +20,21 @@
     window.onload = loadScripts;
 </script>
 
+<script>
+    // GLOBAL ADMIN LOADER
+    $(document).ajaxStart(function () {
+        $('#loader_form').fadeIn(200);
+    });
+
+    $(document).ajaxStop(function () {
+        $('#loader_form').fadeOut(200);
+    });
+
+    $(document).ajaxError(function () {
+        $('#loader_form').fadeOut(200);
+    });
+</script>
+
 
 
 <!--<script th:src="@{/assets/js/main.js}" defer></script>-->

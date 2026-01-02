@@ -1,3 +1,16 @@
 <div class="copyright">
     <!--&copy; Copyright --><strong><span>Logical SoftTech</span></strong><!--. All Rights Reserved-->
 </div>
+<script>
+$(document).ajaxStart(function () {
+    $('#loader_form').fadeIn(200);
+});
+
+$(document).ajaxStop(function () {
+    $('#loader_form').fadeOut(200);
+});
+
+$(document).ajaxError(function () {
+    $('#loader_form').fadeOut(200);
+});
+</script>

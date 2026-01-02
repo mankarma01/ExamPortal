@@ -176,7 +176,7 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowedOrigins(List.of(
-            "https://fastidious-parfait-a42fa2.netlify.app",
+            "https://logicalsofttech-exam-portal.netlify.app",
             "http://localhost:5500"
         ));
         config.setAllowCredentials(true);
